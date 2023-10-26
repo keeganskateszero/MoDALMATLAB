@@ -273,6 +273,7 @@ classdef MoDAL
 
         % Compute WT
         function [freq,modulus] = WaveletTransform(time,signal,minFreq,maxFreq,options)
+            %
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Wavelet Transform using Morlet Wavelet
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
