@@ -1,6 +1,6 @@
 classdef MoDAL
     properties (Constant)
-        version = "1.0.0";
+        version = "1.0.1";
     end
 
     methods(Static)
@@ -15,7 +15,7 @@ classdef MoDAL
         function Install
             p1 = pwd;
 
-            url1 = 'https://drive.google.com/u/0/uc?id=1HOj6OBKCMdXw-BZ5knjRv5dy4e0ED8eq&export=download';
+            url1 = 'https://drive.google.com/u/0/uc?id=1HOj6OBKCMdXw-BZ5knjRv5dy4e0ED8eq&export';
             url2 = 'https://drive.google.com/u/0/uc?id=1aLm6TajZglFrJDN_-XMsgGnAv1UM8TeM&export=download';
             url3 = 'https://drive.google.com/u/0/uc?id=12lB_prP97Tyd1rKCecJcE_7sujuv-axX&export=download';
             url4 = 'https://drive.google.com/u/0/uc?id=1w9ogr_YQAF7pS_suddBKIE_BEesfJGki&export=download';
@@ -471,6 +471,60 @@ classdef MoDAL
             xlim([minFreq maxFreq])
         end
 
+        function PlotTSFT(time,signal,minFreq,maxFreq,options)
+            % Plots the time series and wavelet transform of a signal.
+            %
+            % Required Inputs
+            % ---------------------------------------------
+            % time - Time vector
+            % signal - Signal with dimensions N x 1
+            % minFreq - Minimum frequency computed in the WT.
+            % maxFreq - Maximum frequency computed in the WT.
+            %
+            % Optional Inputs (Uses Name-value format)
+            % ---------------------------------------------
+            % label = label for the plots
+            %    'Disp' for displacement data
+            %    'Vel' for velocity data
+            %    'Acc' for acceleration data
+            %    'Force' for force data
+            %    'Modal' for modal displacement data
+            %    'Tension' for tension data
+            % timeStart - Sets the minimum xlimit for time plots to this
+            %           value.
+            % timeEnd - Sets the maximum xlimit for time plots to this
+            %           value.
+            % FontSize - Sets the font size to this value.
+            % title - Adds title to the time series plot. Default is no
+            %         title.
+
+            arguments
+                time (:,1) double
+                signal (:,1) double
+                minFreq double
+                maxFreq double
+                options.label string = '';
+                options.timeStart double = time(1);
+                options.timeEnd double = time(end);
+                options.fontSize double = 12;
+                options.force (:,1) double = [];
+                options.title string = '';
+            end
+
+            figure
+            % Plot Time Series
+            subplot(2,1,1)
+            MoDAL.TSPlot(time,signal,timeStart=options.timeStart,...
+                timeEnd=options.timeEnd,label=options.label, ...
+                fontSize=options.fontSize)
+            title(options.title)
+
+            % Plot FFT
+            subplot(2,1,2)
+            MoDAL.FTPlot(time,signal,minFreq,maxFreq,force=options.force, ...
+                label=options.label,fontSize=options.fontSize)
+        end
+
         function PlotTSWT(time,signal,minFreq,maxFreq,options)
             % Plots the time series and wavelet transform of a signal.
             %
@@ -519,7 +573,7 @@ classdef MoDAL
                 maxFreq double
                 options.numFreq double = 100;
                 options.motherWaveletFreq double = 2;
-                options.label string = 'Signal';
+                options.label string = '';
                 options.timeStart double = time(1);
                 options.timeEnd double = time(end);
                 options.fontSize double = 12;
