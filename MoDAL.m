@@ -5,7 +5,6 @@ classdef MoDAL
 
     methods(Static)
         function Help
-            % Lists help for the MoDAL class
             fprintf('This class includes a collection of plotting codes often used by MoDAL members.\n')
             fprintf('For help contact Professor Keegan J. Moore at kmoore@unl.edu.\n')
             
