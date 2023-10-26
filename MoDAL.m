@@ -479,8 +479,8 @@ classdef MoDAL
             % ---------------------------------------------
             % time - Time vector
             % signal - Signal with dimensions N x 1
-            % minFreq - Minimum frequency computed in the WT.
-            % maxFreq - Maximum frequency computed in the WT.
+            % minFreq - Lower limit of the frequency axis for the FFT.
+            % maxFreq - Upper limit of the frequency axis for the FFT.
             %
             % Optional Inputs (Uses Name-value format)
             % ---------------------------------------------
