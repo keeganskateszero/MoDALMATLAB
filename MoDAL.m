@@ -7,7 +7,7 @@ classdef MoDAL
         function Help
             fprintf('\nThis class includes a collection of plotting codes often used by MoDAL members.\n\n')
             fprintf('Enter "MoDAL.Install" into the command window to install this class.\n\n')
-            fprintf('For help contact Professor Keegan J. Moore at kmoore@unl.edu.\n')
+            fprintf('For help contact Professor Moore at kmoore@unl.edu.\n')
             
             methods(MoDAL)
         end
