@@ -4,7 +4,7 @@ classdef MoDAL
     end
 
     methods(Static)
-        
+
         function Help
             fprintf('\nThis class includes a collection of plotting codes often used by MoDAL members.\n\n')
             fprintf('Enter "MoDAL.Install" into the command window to install this class.\n\n')
@@ -1881,7 +1881,7 @@ classdef MoDAL
                 chp1 double = 0.2;
                 chp2 double = 0.2;
             end
-            L = length(time); L_chp1 = chop(L*chp1,2); L_chp2 = chop(L*chp2,2);
+            L = length(time); L_chp1 = MoDAL.chop(L*chp1,2); L_chp2 = MoDAL.chop(L*chp2,2);
             [x_o_ini,~] = MoDAL.MirrorImgSigOIni(time(1:L_chp1),signal(1:L_chp1));
             [x_e_ini,~] = MoDAL.MirrorImgSigEIni(time(1:L_chp1),signal(1:L_chp1));
             [x_o_fin,~] = MoDAL.MirrorImgSigOFin(time(end-L_chp2+1:end),signal(end-L_chp2+1:end));
