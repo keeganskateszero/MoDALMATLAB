@@ -89,7 +89,6 @@ classdef MoDAL
             T = 1;
             Tb = 3;
             force = sin(pi/T*(time-Tb)).*(heaviside(time-Tb)-heaviside(time-T-Tb));
-            force = awgn(force,58);
             
             % Plot force
             MoDAL.PlotForce(time,force)
