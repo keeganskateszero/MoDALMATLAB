@@ -1,11 +1,12 @@
 classdef MoDAL
     properties (Constant)
-        version = "0.7.5";
+        version = "1.0.0";
     end
 
     methods(Static)
         function Help
-            fprintf('This class includes a collection of plotting codes often used by MoDAL members.\n')
+            fprintf('\nThis class includes a collection of plotting codes often used by MoDAL members.\n\n')
+            fprintf('Enter "MoDAL.Install" into the command window to install this class.\n\n')
             fprintf('For help contact Professor Keegan J. Moore at kmoore@unl.edu.\n')
             
             methods(MoDAL)
@@ -60,34 +61,48 @@ classdef MoDAL
         end
 
         function ExamplePlot
-            fprintf(['\nExample for how to use the plotting codes in this object.\n You can copy-paste the following into a script to play around with the codes.\n\n', ...
+            fprintf(['\nExample for how to use the plotting codes in this object.\nYou can copy-paste the following into a script to play around with the codes.\n\n', ...
                 'clc,clear,close all \n', ...
-                't = 0:1e-2:100;\n', ...
-                'x = 0.4*sin(2*pi*3.44589*t)+0.138*cos(2*pi*8.48359*t);\n', ...
-                'y = 0.3*sin(2*pi*3.44589*t)+0.03578*cos(2*pi*8.48359*t);\n\n', ...
+                'time = 0:1e-2:100;\n', ...
+                'signal1 = 0.4*sin(2*pi*3.44589*time)+0.138*cos(2*pi*8.48359*time);\n', ...
+                'signal2 = 0.3*sin(2*pi*3.44589*time)+0.03578*cos(2*pi*8.48359*time);\n\n', ...
+                'T = 1;\n', ...
+                'Tb = 3;\n', ...
+                'force = sin(pi/T*(time-Tb)).*(heaviside(time-Tb)-heaviside(time-T-Tb));\n', ...
+                'force = awgn(force,58);\n\n', ...
+                '%% Plot force\n', ...
+                'MoDAL.PlotForce(time,force)\n\n', ...
                 'freqMin = 0;\n', ...
                 'freqMax = 20;\n\n', ...
                 '%% Plot a single sensor\n', ...
-                'MoDAL.PlotTSWT(t,x,freqMin,freqMax,label=''Disp'')\n', ...
-                'MoDAL.PlotTSWTFT(t,x,freqMin,freqMax,label=''Disp'')\n\n', ...
+                'MoDAL.PlotTSWT(time,signal1,freqMin,freqMax,label=''Disp'')\n', ...
+                'MoDAL.PlotTSWTFT(time,signal1,freqMin,freqMax,label=''Disp'')\n\n', ...
                 '%% Plot two sensors\n', ...
-                'MoDAL.PlotTSWT_Compare(t,x,t,y,freqMin,freqMax,label=''Disp'')\n', ...
-                'MoDAL.PlotTSWTFT_Compare(t,x,t,y,freqMin,freqMax,label=''Disp'')\n\n'])
+                'MoDAL.PlotTSWT_Compare(time,signal1,time,signal2,freqMin,freqMax,label=''Disp'')\n', ...
+                'MoDAL.PlotTSWTFT_Compare(time,signal1,time,signal2,freqMin,freqMax,label=''Disp'')\n\n'])
             close all
-            t = 0:1e-2:100;
-            x = 0.4*sin(2*pi*3.44589*t)+0.138*cos(2*pi*8.48359*t);
-            y = 0.3*sin(2*pi*3.44589*t)+0.03578*cos(2*pi*8.48359*t);
+            time = 0:1e-2:100;
+            signal1 = 0.4*sin(2*pi*3.44589*time)+0.138*cos(2*pi*8.48359*time);
+            signal2 = 0.3*sin(2*pi*3.44589*time)+0.03578*cos(2*pi*8.48359*time);
+
+            T = 1;
+            Tb = 3;
+            force = sin(pi/T*(time-Tb)).*(heaviside(time-Tb)-heaviside(time-T-Tb));
+            force = awgn(force,58);
+            
+            % Plot force
+            MoDAL.PlotForce(time,force)
 
             freqMin = 0;
             freqMax = 20;
 
             % Plot a single sensor
-            MoDAL.PlotTSWT(t,x,freqMin,freqMax,label='Disp')
-            MoDAL.PlotTSWTFT(t,x,freqMin,freqMax,label='Disp')
+            MoDAL.PlotTSWT(time,signal1,freqMin,freqMax,label='Disp')
+            MoDAL.PlotTSWTFT(time,signal1,freqMin,freqMax,label='Disp')
 
             % Plot two sensors
-            MoDAL.PlotTSWT_Compare(t,x,t,y,freqMin,freqMax,label='Disp')
-            MoDAL.PlotTSWTFT_Compare(t,x,t,y,freqMin,freqMax,label='Disp')
+            MoDAL.PlotTSWT_Compare(time,signal1,time,signal2,freqMin,freqMax,label='Disp')
+            MoDAL.PlotTSWTFT_Compare(time,signal1,time,signal2,freqMin,freqMax,label='Disp')
         end
 
         function [p1,p2] = PlotForce(time,force,options)
@@ -102,14 +117,25 @@ classdef MoDAL
             % ---------------------------------------------
             % timeStart - lower x-limit for zoomed-in view
             % timeEnd - upper x-limit for zoomed-in view
-            %
+            % nonDim - 0 sets units to dimensional
+            %        - 1 sets units to nondimensional (uses \cdot)
+            % forceUnits - character vector that specifies the force units.
+            %              nonDim overrides this option.
+            % timeUnits - character vector that specifies the time units.
+            %             nonDim overrides this option.
             arguments
-                time double
-                force double
+                time (:,1) double
+                force (:,1) double
                 options.timeStart double
                 options.timeEnd double
+                options.nonDim double = 0
+                options.forceUnits char = 'N'
+                options.timeUnits char = "s"
             end
-
+            if options.nonDim == 1
+                options.forceUnits = '\cdot';
+                options.timeUnits = '\cdot';
+            end
             if ~isfield(options,"timeStart")
                 idx = findchangepts(force,"MaxNumChanges",2);
                 options.timeStart = time(idx(1));
@@ -133,15 +159,16 @@ classdef MoDAL
             figure
             p1 = axes;
             plot(time,force,'k');
-            xlabel('Time [s]')
-            ylabel('Force [N]')
+            xlabel(['Time [' options.timeUnits ']'])
+            ylabel(['Force [' options.forceUnits ']'])
             xlim([time(1) time(end)])
+            ylim(1.1*[min(force) max(force)])
             p2 = axes;
             p2.Position = [0.3 0.35 0.55 0.5];
             plot(time,force,'k')
             xlim([options.timeStart options.timeEnd])
             annotation('Arrow','Position',[0.1732,0.2363,0.0786,0.0620])
-            title(sprintf('Max Amplitude = %g N',round(max(abs(force)))))
+            title(sprintf('Max Amplitude = %g %s',round(max(abs(force))),options.forceUnits))
 
         end
 
