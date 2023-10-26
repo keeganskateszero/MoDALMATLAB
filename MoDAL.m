@@ -107,6 +107,7 @@ classdef MoDAL
         end
 
         function [p1,p2] = PlotForce(time,force,options)
+            %
             % Plots an impact hammer force signal.
             %
             % Required Inputs
