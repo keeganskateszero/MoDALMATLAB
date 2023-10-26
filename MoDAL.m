@@ -1,9 +1,10 @@
 classdef MoDAL
     properties (Constant)
-        version = "1.0.1";
+        version = "1.0.2";
     end
 
     methods(Static)
+        
         function Help
             fprintf('\nThis class includes a collection of plotting codes often used by MoDAL members.\n\n')
             fprintf('Enter "MoDAL.Install" into the command window to install this class.\n\n')
@@ -97,12 +98,12 @@ classdef MoDAL
             freqMax = 20;
 
             % Plot a single sensor
-            MoDAL.PlotTSWT(time,signal1,freqMin,freqMax,label='Disp')
-            MoDAL.PlotTSWTFT(time,signal1,freqMin,freqMax,label='Disp')
+            MoDAL.PlotTSWT(time,signal1,freqMin,freqMax,'label','Disp')
+            MoDAL.PlotTSWTFT(time,signal1,freqMin,freqMax,'label','Disp')
 
             % Plot two sensors
-            MoDAL.PlotTSWT_Compare(time,signal1,time,signal2,freqMin,freqMax,label='Disp')
-            MoDAL.PlotTSWTFT_Compare(time,signal1,time,signal2,freqMin,freqMax,label='Disp')
+            MoDAL.PlotTSWT_Compare(time,signal1,time,signal2,freqMin,freqMax,'label','Disp')
+            MoDAL.PlotTSWTFT_Compare(time,signal1,time,signal2,freqMin,freqMax,'label','Disp')
         end
 
         function [p1,p2] = PlotForce(time,force,options)
