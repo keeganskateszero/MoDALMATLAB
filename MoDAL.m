@@ -64,15 +64,14 @@ classdef MoDAL
         function UpdateMoDAL
             URL = 'https://raw.githubusercontent.com/keeganskateszero/MoDALMATLAB/main/MoDAL.m';
             GetRequest = webread(URL);
-            R = strfind(GetRequest,'version');
+            R = strfind(GetRequest,'Version');
             P = strfind(GetRequest,';');
-            GetRequest(R(1):P(1))
             eval(GetRequest(R(1):P(1)))
             if MoDAL.Version ~= Version
                 filename1 = 'MoDAL.m';
                 destination1 = fullfile([userpath '/'],filename1);
                 websave(destination1,'https://raw.githubusercontent.com/keeganskateszero/MoDALMATLAB/main/MoDAL.m');
-                fprintf('MoDAL updated to version %s.\n\n',Version)
+                fprintf('\nMoDAL updated to version %s.\n\n',Version)
             end
         end
 
