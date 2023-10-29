@@ -1,6 +1,6 @@
 classdef MoDAL
     properties (Constant)
-        version = "1.0.2";
+        version = "1.0.5";
     end
 
     methods(Static)
@@ -16,7 +16,7 @@ classdef MoDAL
         function Install
             p1 = pwd;
 
-            url1 = 'https://drive.google.com/u/0/uc?id=1HOj6OBKCMdXw-BZ5knjRv5dy4e0ED8eq&export';
+            url1 = 'https://drive.google.com/u/0/uc?id=1HOj6OBKCMdXw-BZ5knjRv5dy4e0ED8eq&export=download';
             url2 = 'https://drive.google.com/u/0/uc?id=1aLm6TajZglFrJDN_-XMsgGnAv1UM8TeM&export=download';
             url3 = 'https://drive.google.com/u/0/uc?id=12lB_prP97Tyd1rKCecJcE_7sujuv-axX&export=download';
             url4 = 'https://drive.google.com/u/0/uc?id=1w9ogr_YQAF7pS_suddBKIE_BEesfJGki&export=download';
@@ -42,23 +42,37 @@ classdef MoDAL
 
             destination = fullfile([userpath '/'],'startup.m');
 
-            if ~isfile(destination)
-                FID=fopen(destination,'w');
-                fprintf(FID,['%%   STARTUPSAV   Startup file\n%%   Change the ' ...
-                    'name of this file to STARTUP.M. The file\n%%   ' ...
-                    'is executed when MATLAB starts up, if it exists\n' ...
-                    '%%   anywhere on the path.  In this example, the\n' ...
-                    '%%   MAT-file generated during quitting using FINISHSAV\n' ...
-                    '%%   is loaded into MATLAB during startup.\n\n' ...
-                    '%%   Copyright 1984-2000 The MathWorks, Inc. \n\n' ...
-                    'format shortg\nget(0,''Factory'');\n' ...
-                    'set(0,''defaultfigurecolor'',[1 1 1])\n' ...
-                    'set(0,''defaultaxesfontsize'',12)\n' ...
-                    'set(0,''DefaultLineLineWidth'',1);']);
-                fclose(FID);
-            end
+            FID=fopen(destination,'w');
+            fprintf(FID,['%%   STARTUPSAV   Startup file\n%%   Change the ' ...
+                'name of this file to STARTUP.M. The file\n%%   ' ...
+                'is executed when MATLAB starts up, if it exists\n' ...
+                '%%   anywhere on the path.  In this example, the\n' ...
+                '%%   MAT-file generated during quitting using FINISHSAV\n' ...
+                '%%   is loaded into MATLAB during startup.\n\n' ...
+                '%%   Copyright 1984-2000 The MathWorks, Inc. \n\n' ...
+                'format shortg\nget(0,''Factory'');\n' ...
+                'set(0,''defaultfigurecolor'',[1 1 1])\n' ...
+                'set(0,''defaultaxesfontsize'',12)\n' ...
+                'set(0,''DefaultLineLineWidth'',1);\n' ...
+                'MoDAL.Update' ...
+                '']);
+            fclose(FID);
 
             fprintf('\nMoDAL version %s successfully installed.\n\n',MoDAL.version)
+        end
+
+        function UpdateMoDAL
+            URL = 'https://raw.githubusercontent.com/keeganskateszero/MoDALMATLAB/main/MoDAL.m';
+            GetRequest = webread(URL);
+            R = strfind(GetRequest,'version');
+            P = strfind(GetRequest,';');
+            eval(GetRequest(R(1):P(1)))
+            if MoDAL.version ~= version
+                filename1 = 'MoDAL.m';
+                destination1 = fullfile([userpath '/'],filename1);
+                websave(destination1,'https://raw.githubusercontent.com/keeganskateszero/MoDALMATLAB/main/MoDAL.m');
+                fprintf('MoDAL updated to version %s.\n\n',version)
+            end
         end
 
         function ExamplePlot
@@ -89,6 +103,7 @@ classdef MoDAL
             T = 1;
             Tb = 3;
             force = sin(pi/T*(time-Tb)).*(heaviside(time-Tb)-heaviside(time-T-Tb));
+            force = awgn(force,58);
             
             % Plot force
             MoDAL.PlotForce(time,force)
@@ -1671,9 +1686,7 @@ classdef MoDAL
             end
         end
 
-
-
-        function [Amp,theta,omega] = InstAmpFreq(time,signal,options)
+        function [amp,theta,omega] = InstAmpFreq(time,signal,options)
             % Citation
             % --------
             % K.J. Moore, M. Kurt, M. Eriten, D.M. McFarland, L.A. Bergman, A.F. Vakakis,
@@ -1706,9 +1719,9 @@ classdef MoDAL
             [b,a] = butter(options.filtOrder,Fcs,'low');
             theta2 = filtfilt(b,a,theta1);
             omega2 = filtfilt(b,a,omega1);
-            Amp2 = filtfilt(b,a,Amp1);
+            amp2 = filtfilt(b,a,Amp1);
 
-            Amp = MoDAL.UnmirrorSignal(Amp2,L_chp1,L_chp2,NoMirrorIni,NoMirrorEnd);
+            amp = MoDAL.UnmirrorSignal(amp2,L_chp1,L_chp2,NoMirrorIni,NoMirrorEnd);
             theta = MoDAL.UnmirrorSignal(theta2,L_chp1,L_chp2,NoMirrorIni,NoMirrorEnd);
             omega = MoDAL.UnmirrorSignal(omega2,L_chp1,L_chp2,NoMirrorIni,NoMirrorEnd);
 
