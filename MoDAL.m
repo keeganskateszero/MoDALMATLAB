@@ -58,7 +58,7 @@ classdef MoDAL
                 '']);
             fclose(FID);
 
-            fprintf('\nMoDAL version %s successfully installed.\n\n',MoDAL.version)
+            fprintf('\nMoDAL version %s successfully installed.\n\n',MoDAL.Version)
         end
 
         function UpdateMoDAL
