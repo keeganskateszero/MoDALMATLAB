@@ -1,6 +1,6 @@
 classdef MoDAL
     properties (Constant)
-        Version = "1.0.5";
+        Version = "1.0.6";
     end
 
     methods(Static)
@@ -66,7 +66,7 @@ classdef MoDAL
             GetRequest = webread(URL);
             R = strfind(GetRequest,'Version');
             P = strfind(GetRequest,';');
-            eval(GetRequest(R(1):P(1)))
+            eval(GetRequest(R(1):P(1)));
             if MoDAL.Version ~= Version
                 filename1 = 'MoDAL.m';
                 destination1 = fullfile([userpath '/'],filename1);
