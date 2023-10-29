@@ -1,6 +1,6 @@
 classdef MoDAL
     properties (Constant)
-        version = "1.0.5";
+        Version = "1.0.5";
     end
 
     methods(Static)
@@ -54,7 +54,7 @@ classdef MoDAL
                 'set(0,''defaultfigurecolor'',[1 1 1])\n' ...
                 'set(0,''defaultaxesfontsize'',12)\n' ...
                 'set(0,''DefaultLineLineWidth'',1);\n' ...
-                'MoDAL.Update' ...
+                'MoDAL.UpdateMoDAL' ...
                 '']);
             fclose(FID);
 
@@ -66,6 +66,7 @@ classdef MoDAL
             GetRequest = webread(URL);
             R = strfind(GetRequest,'version');
             P = strfind(GetRequest,';');
+            GetRequest(R(1):P(1))
             eval(GetRequest(R(1):P(1)))
             if MoDAL.version ~= version
                 filename1 = 'MoDAL.m';
