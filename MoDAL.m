@@ -1,6 +1,6 @@
 classdef MoDAL
     properties (Constant)
-        Version = "1.0.6";
+        Version = "1.0.7";
     end
 
     methods(Static)
@@ -120,7 +120,7 @@ classdef MoDAL
             MoDAL.PlotTSWTFT_Compare(time,signal1,time,signal2,freqMin,freqMax,'label','Disp')
         end
 
-        function [p1,p2] = PlotForce(time,force,options)
+        function PlotForce(time,force,options)
             %
             % Plots an impact hammer force signal.
             %
@@ -183,7 +183,7 @@ classdef MoDAL
             p2.Position = [0.3 0.35 0.55 0.5];
             plot(time,force,'k')
             xlim([options.timeStart options.timeEnd])
-            annotation('Arrow','Position',[0.1732,0.2363,0.0786,0.0620])
+            annotation('Arrow','Position',[0.1732,0.2363,0.0786,0.0620]);
             title(sprintf('Max Amplitude = %g %s',round(max(abs(force))),options.forceUnits))
 
         end
